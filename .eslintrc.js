@@ -13,7 +13,7 @@ module.exports = {
     "eslint:standard",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
+    " ",
   ],
   // required to lint *.vue files
   plugins: ["html"],
@@ -35,7 +35,7 @@ module.exports = {
       },
     ],
     // 关闭语句强制分号结尾
-    semi: 0, //key值前面是否要有空格
+    semi: 2, //key值前面是否要有空格
     "no-undef": 0,
     "no-trailing-spaces": 0,
     "comma-dangle": 0,
