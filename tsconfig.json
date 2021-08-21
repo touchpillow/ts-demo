@@ -1,14 +1,18 @@
 {
     "semi": true,
-    "strict": true,
-    "strictNullChecks": true,
+    // "strict": true,
+    // "strictNullChecks": true,
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2016",
         "jsx": "preserve",
-        "strictFunctionTypes": true,
+        // "strict": true,
+        // "strictFunctionTypes": true,
         "sourceMap": true,
-        "strict": true,
+        // "strictNullChecks": true,
+        "typeRoots": [
+            "./typings"
+        ]
     },
     "exclude": [
         "node_modules",

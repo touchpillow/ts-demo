@@ -98,4 +98,13 @@ namespace AAA {
   }
   const aaaa = new AAA();
   aaaa.test();
+  interface BBB {
+    a: number;
+  }
+  let eee: BBB = { a: 1 };
+  // const ffff: JSONString<BBB> = "{\"_\":'1'}";
+  const fff = eee.a;
+  type fType = typeof fff;
+  const stj = JSON.stringify(eee);
+  const stra = JSON.parse(stj);
 }

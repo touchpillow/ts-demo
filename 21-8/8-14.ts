@@ -50,23 +50,37 @@ const c: C = {
   d: "d",
 };
 
-interface Tree extends BasicTree<Tree> {
+interface Tree {
   name: string;
-  //   children?: Tree[];
+  children?: Tree[];
+  aaa?: Tree[];
 }
 
 type isExtends<A, B> = A extends B ? A : B;
 
-const findTargetInTree = <T extends BasicTree<T>, K extends keyof T>(
+type FindTarget<T> = {
+  [K in keyof T]: T[K] extends T[] ? K : never;
+}[keyof T];
+// type VVVVV = FindTarget<BasicTree<Tree>>;
+const findTargetInTree = <
+  T extends DynamicTree<T, U>,
+  K extends keyof T,
+  U extends string & FindTarget<T>
+>(
   list: T[],
   key: K,
-  value: T[K]
+  value: T[K],
+  childKey: U
 ): T | void => {
+  // const item = list[0];
+  // const children = item[childKey] as T[];
   const stack: T[] = [...list];
   while (stack.length) {
     const item = stack.shift();
     if (item[key] === value) return item;
-    stack.push(...item.children);
+    const ch = item[childKey];
+    const v = typeof ch;
+    stack.push(...item[childKey]);
   }
 };
 const a: Tree[] = [
@@ -83,7 +97,7 @@ const a: Tree[] = [
     children: [],
   },
 ];
-findTargetInTree(a, "name", "");
+findTargetInTree(a, "name", "", "children");
 const findTargetInTree2 = <T, K extends keyof T>(
   list: T[],
   key: K,
