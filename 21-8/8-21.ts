@@ -6,33 +6,15 @@ namespace Date821 {
     a: string;
     b: string;
   }
-  let a: A = {
-    a: "",
-  };
-  let b: B = {
-    a: "",
-    b: "",
-  };
-  a = b;
-  const c = {
-    a: "",
-    b: "",
-  };
-  a = c;
   type FnA = (v: A) => void;
   type FnB = (v: B) => void;
-  let fnA: FnA = (v: A) => {};
+  let fnA: FnA = (v: A) => {
+    console.log(v.a);
+  };
   let fnB: FnB = (v: B) => {
     console.log(v.b);
   };
-  //   fnA = fnB;
-  //   fnB({
-  //     a: "",
-  //   });
-
-  fnA(b);
-  fnB(a);
-  //   fnB = fnA;
+  fnA = fnB; //是否安全？
 
   console.log(b.b);
   interface StringA extends String {

@@ -9,6 +9,7 @@ namespace N821 {
   let a: A = {
     a: "",
   };
+  // a.b = 1;
   let b: B = {
     a: 1,
     b: 1,
@@ -24,7 +25,7 @@ namespace N821 {
   function aaaa<T>(params: T[], s: T) {
     return params[0];
   }
-  const vc = aaaa([1, 2, 3], "");
+  const vc = aaaa([1, 2, 3], 1);
 }
 
 export default N821;

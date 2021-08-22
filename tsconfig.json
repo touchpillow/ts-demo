@@ -8,8 +8,8 @@
         "jsx": "preserve",
         // "strict": true,
         // "strictFunctionTypes": true,
-        "sourceMap": true,
         // "strictNullChecks": true,
+        "sourceMap": true,
         "typeRoots": [
             "./typings"
         ]
