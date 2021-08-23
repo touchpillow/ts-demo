@@ -28,4 +28,5 @@ namespace N822 {
     c = a as string as TB as boolean;
   }
   //   a = "";
+  const str: JSONString<B> = JSON.stringify(b);
 }
