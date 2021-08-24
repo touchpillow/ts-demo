@@ -6,6 +6,8 @@ namespace Date821 {
     a: string;
     b: string;
   }
+  let a: A;
+  let b: B;
   type FnA = (v: A) => void;
   type FnB = (v: B) => void;
   let fnA: FnA = (v: A) => {
@@ -14,6 +16,7 @@ namespace Date821 {
   let fnB: FnB = (v: B) => {
     console.log(v.b);
   };
+  a = b;
   fnA = fnB; //是否安全？
 
   console.log(b.b);
