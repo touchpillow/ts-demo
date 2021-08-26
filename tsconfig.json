@@ -9,7 +9,7 @@
         "experimentalDecorators": true,
         // "strict": true,
         // "strictFunctionTypes": true,
-        // "strictNullChecks": true,
+        "strictNullChecks": true,
         "sourceMap": true,
         "typeRoots": [
             "./typings"

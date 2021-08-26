@@ -26,10 +26,10 @@ namespace N825 {
     value: "center";
     key: "text-align";
   }
-
-  type AlignValue2 = VerticalAlign | HorizontalAlign;
   let align: VerticalAlign;
-  handle("center", "vertical-align");
+  handle("middle", "vertical-align");
+  type AlignValue2 = VerticalAlign | HorizontalAlign;
+
   function handle(
     value: VerticalAlign["value"],
     key: VerticalAlign["key"]
