@@ -27,9 +27,14 @@ namespace N825 {
     key: "text-align";
   }
   let align: VerticalAlign;
-  handle("middle", "vertical-align");
   type AlignValue2 = VerticalAlign | HorizontalAlign;
-
+  // //参数的类型约束
+  handle("center", "text-align");
+  // function handle<T extends AlignValue2["type"]>(
+  //   type: T,
+  //   value: Extract<AlignValue2, { type: T }>["value"]
+  // ) {}
+  //函数重载
   function handle(
     value: VerticalAlign["value"],
     key: VerticalAlign["key"]

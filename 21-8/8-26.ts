@@ -21,9 +21,7 @@ namespace N826 {
   ) extends (v: infer R) => any
     ? R
     : never;
-  type AAndB = UnionToIntersection<A | B>;//A & B
-
-  type IntersectionToUnion<T>=(v:T)=>any extends (v:any)=>any?
+  type AAndB = UnionToIntersection<A | B>; //A & B
 
   interface A {
     a: string;

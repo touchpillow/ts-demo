@@ -74,7 +74,15 @@ namespace N829 {
         : never
       : never
     : never;
-
+  interface A {
+    a: string;
+    b: string;
+  }
+  interface B {
+    c: number;
+    d: number;
+  }
+  type mer = Merge<A & B>;
   type Merge<T> = { [P in keyof T as T[P] extends "" ? never : P]: T[P] };
 
   type Result = Merge<
@@ -82,4 +90,13 @@ namespace N829 {
   >;
   type AAA =
     ParseURL<"https://username:password@example.com:443/p/a/t/h?k1=v1&k2=v2#h">;
+  type aaa = string extends unknown ? 1 : 2;
+  // let a: unknown = 1;
+  type ins = string & (string | number);
+  type Tuple1 = ["large", "normal", "mini", "small"];
+  type Length<T extends any[]> = T["length"];
+  const a: number[] = [1, 2, 3];
+  type CCC = Length<Tuple1>;
+  type CCCC = 5;
+  const v: CCCC = 5;
 }

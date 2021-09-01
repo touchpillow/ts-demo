@@ -16,16 +16,16 @@ namespace Date821 {
   let fnB: FnB = (v: B) => {
     console.log(v.b);
   };
-  a = b;
+  // a = b;
   fnA = fnB; //是否安全？
 
-  console.log(b.b);
+  // console.log(b.b);
   interface StringA extends String {
     // _: never;
     a: number;
   }
-  let sa: JSONString<A> = "{'_': 's'}";
-  const res = JSON.parse(sa);
+  // let sa: JSONString<A> = "{'_': 's'}";
+  // const res = JSON.parse(sa);
   //   type UnionT = "x" | "z";
   type UnionToIntersection<T> = (
     v: T

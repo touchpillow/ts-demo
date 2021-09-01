@@ -43,4 +43,12 @@ namespace N828 {
   let bbb: BBB = "1";
   function fn(params: AAA) {}
   const c = AAA as BBB;
+  // const a = {
+  //   a: {
+  //     b: 1,
+  //   },
+  // };
+  const data = {
+    a: {},
+  };
 }
