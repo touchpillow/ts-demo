@@ -7,16 +7,17 @@
         "target": "es2016",
         "jsx": "react-jsx",
         "experimentalDecorators": true,
-        // "strict": true,
-        // "strictFunctionTypes": true,
+        "strictFunctionTypes": true,
         "strictNullChecks": true,
         "sourceMap": true,
         "typeRoots": [
             "./typings"
         ]
     },
+    "extends": "./base.json",
     "exclude": [
         "node_modules",
-        "**/node_modules/*"
+        "**/node_modules/*",
+        "./21-9/9-4.ts"
     ],
 }

@@ -87,4 +87,6 @@ namespace N0901 {
   type TimeString = ConnectTime<Hour, Min>;
   function getTime(params: TimeString) {}
   getTime("02:22");
+
+  type A = string | undefined;
 }
