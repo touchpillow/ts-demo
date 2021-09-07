@@ -52,4 +52,10 @@ namespace N906 {
   }
   let b: B = { a: "" };
   const v = b["name"]; //类型为string|undefiend
+
+  const createKeyboard = (modelID: number) => {
+    const defaultModelID = 23;
+    // 'defaultModelID' is declared but its value is never read.
+    return { type: "keyboard", modelID };
+  };
 }

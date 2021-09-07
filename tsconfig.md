@@ -1,3 +1,7 @@
+# 配置的思路
+
+尽量在不影响开发效率的前提下，执行严格的类型检查，使用准确的类型注解，减少 any。
+
 # root fields
 
 ## files
@@ -50,7 +54,7 @@
 - true 未使用的标签被忽略
 - false 引发有关未使用标签的编译器错误
 
-## alwaysStrict
+## alwaysStrict \*\*\*
 
 文件始终在 js 的严格模式下解析，为每个源文件设置""use strict"
 
@@ -71,7 +75,7 @@ const a: A = {
 
 以上示例在开发中常用。如果将 exactOptionalPropertyTypes 设置为 true,那么将 a 设置为 undefined 是不被允许的。
 
-## noFallthroughCasesInSwitch
+## noFallthroughCasesInSwitch \*\*\*
 
 确保 switch 语句中的任何非空 case 包含 break 或 return。
 
@@ -86,7 +90,7 @@ switch (a) {
 }
 ```
 
-## noImplicitAny
+## noImplicitAny \*\*\*
 
 在没有添加类型注解，ts 又没办法通过类型推导自动推断类型时，是否允许默认类型为 any。
 设置为 true 时，没有类型注解的地方会提示错误。
@@ -158,7 +162,7 @@ let a: A = { a: "" };
 const b = a.b; //属性“b”来自索引签名，因此必须使用[“b”]访问它
 ```
 
-## noUncheckedIndexedAccess
+## noUncheckedIndexedAccess \*\*\*
 
 在使用索引签名描述未知的 key 时，是否添加 undefined 到未声明的字段。
 
@@ -170,3 +174,24 @@ interface B {
 let b: B = { a: "" };
 const v = b["name"]; //类型为string|undefiend
 ```
+
+## noUnusedLocals \*\*\*
+
+存在未使用的变量时，是否抛出异常。eslint 也有一样的功能。
+
+## noUnusedParameters \*\*\*
+
+存在未使用的参数时，是否抛出异常。和 noUnusedLocals 类似
+
+## strict
+
+该属性设置为 true 时，启用所有严格模式系列选项。可以根据需要单独关闭某个选项。
+
+### strictBindCallApply \*\*\*
+
+属性设置为 true 时，将会在 call、apply、bind 调用时严格检查参数类型。
+不开启时，这些函数接受任何参数并返回 any
+
+### strictFunctionTypes
+
+更准确的检查函数的参数类型，即是否允许默认的，发生在函数参数未知上的逆变。
