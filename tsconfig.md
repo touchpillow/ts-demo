@@ -70,3 +70,103 @@ const a: A = {
 ```
 
 以上示例在开发中常用。如果将 exactOptionalPropertyTypes 设置为 true,那么将 a 设置为 undefined 是不被允许的。
+
+## noFallthroughCasesInSwitch
+
+确保 switch 语句中的任何非空 case 包含 break 或 return。
+
+```typescript
+switch (a) {
+  case 0:
+    // Fallthrough case in switch.
+    console.log("even");
+  case 1:
+    console.log("odd");
+    break;
+}
+```
+
+## noImplicitAny
+
+在没有添加类型注解，ts 又没办法通过类型推导自动推断类型时，是否允许默认类型为 any。
+设置为 true 时，没有类型注解的地方会提示错误。
+如：
+
+```typescript
+function aa(v) {
+  //参数“v”隐式具有“any”类型
+  console.log(v);
+}
+```
+
+## noImplicitOverride
+
+子类覆盖父类的功能时，是否强制使用 override 关键字。设置为 true 时，如果子类重写父类的功能，需要添加 override 关键字
+
+```typescript
+  class Album {
+    setup() {}
+  }
+  class MLAlbum extends Album {
+    override setup() {}
+  }
+  class SharedAlbum extends Album {
+    setup() {}
+  // This member must have an 'override' modifier because it overrides a member in the base class 'Album'.
+  }
+}
+```
+
+## noImplicitReturns
+
+检查函数中的所有代码路径以确保它们返回一个值.(设置 strictNullChecks 可达到一样的效果，因为没有 return 时默认返回 undefined)
+
+## noImplicitThis
+
+在隐式的 any type 时使用 this 抛出异常
+
+```typescript
+class Rectangle {
+  width: number;
+  height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+  }
+
+  getAreaFunction() {
+    return function () {
+      return this.width * this.height;
+      // 'this' implicitly has type 'any' because it does not have a type annotation.
+      // 'this' implicitly has type 'any' because it does not have a type annotation.
+    };
+  }
+}
+```
+
+## noPropertyAccessFromIndexSignature
+
+是否允许使用点语法读取未知字段。设置为 true 时，只能使用中括号读取未知字段，这样做是为了保证点语法和索引语法访问字段以及在类型中声明属性的一致性。
+
+```typescript
+interface A {
+  a: string;
+  [key: string]: string;
+}
+let a: A = { a: "" };
+const b = a.b; //属性“b”来自索引签名，因此必须使用[“b”]访问它
+```
+
+## noUncheckedIndexedAccess
+
+在使用索引签名描述未知的 key 时，是否添加 undefined 到未声明的字段。
+
+```typescript
+interface B {
+  a: string;
+  [K: string]: string;
+}
+let b: B = { a: "" };
+const v = b["name"]; //类型为string|undefiend
+```

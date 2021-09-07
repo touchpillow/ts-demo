@@ -10,6 +10,11 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "sourceMap": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": false,
+        "noImplicitOverride": true,
+        "noImplicitThis": false,
+        "noPropertyAccessFromIndexSignature": true,
         "typeRoots": [
             "./typings"
         ]
