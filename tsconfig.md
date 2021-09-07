@@ -40,4 +40,33 @@
 - true 无法访问的代码被忽略
 - false 引发有关无法访问代码的编译器错误
 
+  可以配合 prettier 自动删除无法访问的代码
+
 ## allowUnusedLabels
+
+允许未使用的标签(变量)
+
+- undefined （默认）向编辑提供建议作为警告
+- true 未使用的标签被忽略
+- false 引发有关未使用标签的编译器错误
+
+## alwaysStrict
+
+文件始终在 js 的严格模式下解析，为每个源文件设置""use strict"
+
+## exactOptionalPropertyTypes
+
+可选属性是否能被设置为 undefined（值为 undefined 和 interface 没有该属性值，语义上不同，使用上也有细微的差别。）
+
+```typescript
+interface A {
+  a?: number;
+  b: string;
+}
+const a: A = {
+  a: undefined,
+  b: "",
+};
+```
+
+以上示例在开发中常用。如果将 exactOptionalPropertyTypes 设置为 true,那么将 a 设置为 undefined 是不被允许的。
