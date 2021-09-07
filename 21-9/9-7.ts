@@ -1,3 +1,4 @@
+import * as a from "./mpck.json";
 namespace N906 {
   // let a;
   // a = 1;

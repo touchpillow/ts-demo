@@ -30,7 +30,15 @@
 
 是一个对象数组，用于指定要引用的项目，用于将大型项目拆分。
 
-`json{ path:"", composite:"", declarationMap:"" ,prepend:"", outFile:""} `
+```json
+{
+  "path": "",
+  "composite": true,
+  "declarationMap": true,
+  "prepend": true,
+  "outFile": ""
+}
+```
 
 参考 https://www.typescriptlang.org/docs/handbook/project-references.html
 
@@ -192,6 +200,128 @@ const v = b["name"]; //类型为string|undefiend
 属性设置为 true 时，将会在 call、apply、bind 调用时严格检查参数类型。
 不开启时，这些函数接受任何参数并返回 any
 
-### strictFunctionTypes
+### strictFunctionTypes \*\*\*
 
-更准确的检查函数的参数类型，即是否允许默认的，发生在函数参数未知上的逆变。
+更准确的检查函数的参数类型，即是否允许默认的、发生在函数参数位置上的逆变。
+
+### strictNullChecks \*\*\*
+
+是否执行严格的空检查。如果是 false 或者不设置，那么 null、undefined 类型将会被忽略
+
+### strictPropertyInitialization
+
+设置为 true 时，不允许类属性没有初始化(除类型有 undefined 的属性)
+
+### useUnknownInCatchVariables
+
+设置为 true 时，catch 的参数的默认类型为 unknown
+
+# modules
+
+## allowUmdGlobalAccess
+
+设置为 true 时，允许从模块文件内部访问全局对象(如 jq)。和 eslint 的 env 是一样的作用。
+
+## baseUrl
+
+设置解析模块时的基础路径，比如设置 baseUrl 为"./"，解析"a.ts"时完整路径为"./a,ts"
+
+## module,moduleResolution
+
+ts 的模块配置。目前可忽略，使用 es 标准的模块系统。
+
+## noResolve
+
+默认情况下，TypeScript 将检查 import 和 reference 指令的初始文件集，并将这些解析的文件添加到程序中。
+
+如果 noResolve 设置，则不会发生此过程。但是，import 仍会检查语句以查看它们是否解析为有效模块，因此需要确保通过其他方式满足这一要求。
+
+## paths
+
+解析模块时，将导入路径映射到新的路径上，支持路径模式。可以正确的导入 umd/require 包，也可以避免过长的路径。类似 webpack 的路径别名
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "app/*": ["app/*"],
+      "config/*": ["app/_config/*"],
+      "environment/*": ["environments/*"],
+      "shared/*": ["app/_shared/*"],
+      "helpers/*": ["helpers/*"],
+      "tests/*": ["tests/*"]
+    }
+  }
+}
+```
+
+## resolveJsonModule
+
+是否允许导入带有 json 类型的模块。
+
+## rootDir
+
+## typeRoots
+
+指定目录下的文件中的类型将作为全局的类型。该属性不设置时，所有@types 下的类型默认是全局的。设置了之后，只有该属性对应的文件的类似是全局的。
+通常可以通过该属性设置一些基础的全局类型。
+
+## types
+
+默认情况下，所有可见的@types 的包是全局的，通过该属性可指定某些包的 types 是全局的
+
+```json
+{
+  "compilerOptions": {
+    "types": ["node", "jest", "express"]
+  }
+}
+```
+
+# emit
+
+## declaration
+
+设置为 true 时，编译 ts 文件，会生成对应的 js 文件及.d.ts 的类型声明文件。
+
+## declarationDir
+
+将生成的.d.ts 文件放在该属性对应的路径下
+
+## declarationMap
+
+为.d.ts 文件生成一个映射到源 ts 文件的 source map,主要方便编辑器去定位到源文件。
+
+## downlevelIteration
+
+设置为 true 时，在转换成低版本的 js 语法时，对于一些 es6 的遍历 api(for of，...arg，Symbol.iterator 等)，将会使用 Symbol.iterator 更准确的模拟这些遍历行为。
+
+## emitBOM
+
+控制 TypeScript 在写入输出文件时是否会发出字节顺序标记 (BOM)。某些运行时环境需要 BOM 才能正确解释 JavaScript 文件；其他环境要求它不存在。默认值 false 通常是最好的，除非有理由更改它。
+
+## emitDeclarationOnly
+
+只生成.d.ts 文件；不生成.js 文件。
+
+此设置在两种情况下很有用：
+
+- 使用 TypeScript 以外的转译器来生成 JavaScript。
+- 使用 TypeScript 只需要生成.d.ts 文件。
+
+## importHelpers
+
+对于某些降级 api(异步，extends 等)，TypeScript 使用一些辅助代码来完成这类操作。默认情况下，这些代码被插入到使用它们的文件中。如果在许多不同的模块中使用相同的 api，这可能会导致代码重复。
+
+如果该 importHelpers 标志打开，则这些辅助函数将从 tslib 模块导入。您需要确保该 tslib 模块能够在运行时导入。这只影响模块；全局脚本文件不会尝试导入模块。
+
+## importsNotUsedAsValues \*\*\*
+
+该属性控制如何 import 工作，有 3 个不同的选项：
+
+- remove：删除 import type 这类仅引用类型的语句的默认行为。
+- preserve: 保留 import 语句(即使没使用)。这可能会导致保留导入/副作用。
+- error：这会保留所有导入（与 preserve 选项相同），但是当一个变量作为值导入仅用作类型时会出错。如果您想确保没有意外导入任何值，但仍使副作用导入显式，这可能很有用。
+
+可以使用 import type 来显式创建一个 永远不应发送到 JavaScript 的 import 语句。
