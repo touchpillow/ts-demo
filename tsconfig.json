@@ -4,7 +4,7 @@
     // "strictNullChecks": true,
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2016",
+        "target": "ES2015",
         "jsx": "react-jsx",
         "experimentalDecorators": true,
         "strictFunctionTypes": true,
@@ -14,8 +14,7 @@
         "noImplicitReturns": false,
         "noImplicitOverride": true,
         "noImplicitThis": false,
-        "noPropertyAccessFromIndexSignature": true,
-        "resolveJsonModule": true,
+        "extendedDiagnostics": true,
         "typeRoots": [
             "./typings"
         ]

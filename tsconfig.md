@@ -228,7 +228,7 @@ const v = b["name"]; //类型为string|undefiend
 
 ## module,moduleResolution
 
-ts 的模块配置。目前可忽略，使用 es 标准的模块系统。
+ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统。
 
 ## noResolve
 
@@ -545,7 +545,7 @@ PS：es 标准中的装饰器目前处于 stage2 阶段(20210908)，ts 当前的
 
 ## jsxImportSource
 
-## lib
+## lib \*\*\*
 
 ts 内置了 es 标准的 API，以及浏览器环境中的内置对象(document 等)，在以下场景中，可以通过 lib 定义一些高级库和单独的库。
 
@@ -558,3 +558,95 @@ ts 内置了 es 标准的 API，以及浏览器环境中的内置对象(document
 ## noLib
 
 开启此规则时将忽略 lib。
+
+## target \*\*\*
+
+要编译到的 js 的版本，更改 target 会影响 lib，所以这两个要一起配置。
+ESNext 表示 ts 支持的最高版本。所以，不同的 ts 版本，对应的 esnext 也不同，慎用。
+
+## useDefineForClassFields \*\*\*
+
+使用即将发布的标准版本的类字段
+
+# Compiler Diagnostics
+
+## explainFiles
+
+在编译时打印该文件作为项目一部分及作为编译结果一部分的原因，比如 target 指定为 es5，那么相应的文件中会注明 使用到的 es5 的相关 lib。
+
+## extendedDiagnostics
+
+编译时输出花费的响应时间及编译数据，如行数、节点数等。
+
+- Files: 16
+- Lines: 21923
+- Nodes: 88829
+- Identifiers: 30434
+- Symbols: 23002
+- Types: 7218
+- Memory used: 50933K
+- I/O Read time: 0.01s
+- Parse time: 0.36s
+- Program time: 0.37s
+- Bind time: 0.19s
+- Check time: 0.78s
+- transformTime time: 0.02s
+- commentTime time: 0.01s
+- Source Map time: 0.02s
+- I/O Write time: 0.04s
+- printTime time: 0.10s
+- Emit time: 0.12s
+- Total time: 1.46s
+
+## generateCpuProfile
+
+默认值 profile.cpuprofile
+编译器运行期间让 TypeScript 发出 v8 CPU 配置文件。CPU 配置文件可以深入了解为什么您的构建可能会很慢。
+
+此选项只能通过 CLI 使用：--generateCpuProfile tsc-output.cpuprofile。
+
+## listEmittedFiles
+
+输出编译生成的文件路径
+
+## listFiles
+
+输出编译的文件的路径
+
+## traceResolution
+
+打印有关每个文件的解析编译过程
+
+# Projects
+
+## composite
+
+reference 的项目必须设置 composite 启用新设置。需要此设置以确保 TypeScript 可以快速确定在哪里可以找到引用项目的输出。
+
+- 该 rootDir 设置，如果没有明确设置，默认为包含 tsconfig 文件的目录
+- 所有实现文件都必须与 include 模式匹配或列在 files 数组中。如果违反此约束，tsc 将通知未指定哪些文件
+- declaration 必须开启
+
+## disableReferencedProjectLoad
+
+在多项目 TypeScript 程序中，TypeScript 会将所有可用项目加载到内存中，以便为需要完整依赖关系（如“查找所有引用”）的编辑器响应提供准确的结果。
+
+如果项目很大，可以使用该标志 disableReferencedProjectLoad 来禁用所有项目的自动加载。相反，项目会在您通过编辑器打开文件时动态加载。
+
+## disableSolutionSearching
+
+使用复合 TypeScript 项目(使用 reference 引用其他项目)时，此选项提供了一种方法来声明在使用诸如在编辑器中查找所有引用或跳转到定义等功能时不希望包含项目
+
+## disableSourceOfProjectReferenceRedirect
+
+使用复合 TypeScript 项目(使用 reference 引用其他项目)时，此选项提供了一种返回到 3.7 之前的行为的方法，其中 d.ts 文件被用作模块之间的边界
+
+## incremental
+
+将有关上次编译的项目依赖关系图的信息保存到磁盘上的文件中。这会与编译输出相同的文件夹中创建一系列.tsbuildinfo 在文件。在运行时不会使用它们，可以安全地删除它们
+
+## tsBuildInfoFile
+
+指定一个文件将增量编译信息存储为项目的一部分。
+
+此选项提供了一种配置 TypeScript 跟踪它存储在磁盘上的文件以指示项目的构建状态的位置的方法——默认情况下，它们与您发出的 JavaScript 位于同一文件夹中。
