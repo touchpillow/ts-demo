@@ -401,10 +401,160 @@ ts 的模块配置。目前可忽略，使用 es 标准的模块系统。
 
 ## disableSizeLimit \*\*\*
 
-默认情况下，ts 会限制分配的内存，以防止项目非常大时出现内存问题。
+默认情况下，ts 会限制分配的内存，以防止项目非常大时出现内存问题。开启这个选项可去掉这个限制。
 
 ## plugins
 
 要在编辑器中运行的语言服务插件列表.(一般使用编辑器的扩展而非这个属性)
 
 # Interop Constraints
+
+## allowSyntheticDefaultImports
+
+该属性设置为 true 时，可使用
+
+```typescript
+import React from "react";
+```
+
+代替
+
+```typescript
+import * as React from "react";
+```
+
+即使该模块没有默认导出，babel 编译时也会处理，自动创建一个默认值。开启这个选项是让 ts 的行为和 babel 的行为一致。
+
+## esModuleInterop
+
+默认情况下，对于部分导入语句，如：
+
+```typescript
+import * as moment from "moment";
+```
+
+等价于
+
+```typescript
+const moment = require("moment");
+```
+
+以及
+
+```typescript
+import moment from "moment";
+```
+
+等价于
+
+```typescript
+const moment = require("moment").default;
+```
+
+ES6 模块规范规定命名空间 import ( import \* as x) 只能是一个对象,但是 ts 将其视为与 require("moment")相同，require 的结果被视为可调用的函数，这和 es 规范不一致。
+另外，大多数带有 CommonJS/AMD/UMD 模块的库并不像 TypeScript 的实现那样严格。
+
+开启 esModuleInterop 可解决上面两个问题。(启用 esModuleInterop 也会启用 allowSyntheticDefaultImports.)
+
+## forceConsistentCasingInFileNames \*\*\*
+
+不同的系统，对文件/文件夹大小写的规则不同，linux 和 windows 的就不一样(win 后面改了)，开启此规则，可以保证不同系统下的文件名大小写一致。
+
+## isolatedModules
+
+isolatedModules 如果编写的某些代码无法被单文件转换过程正确解释，则设置该标志会发出警告。
+
+它不会改变代码的行为，也不会改变 TypeScript 的检查和发射过程的行为。
+
+## preserveSymlinks
+
+启用该规则后，对于 import 和 reference，解析路径时是相对于配置对应的文件的位置解析的，而不是相对于配置解析到的路径解析。
+
+# Backwards Compatibility
+
+## noImplicitUseStrict
+
+输出目标为非 es6 时，默认会在输出文件头部加上 use strict。启用此规则会不加 use strict，所以一般不用这个属性
+
+## noStrictGenericChecks
+
+在比较两个泛型函数时，TypeScript 将统一类型参数。
+
+```typescript
+type A = <T, U>(x: T, y: U) => [T, U];
+type B = <S>(x: S, y: S) => [S, S];
+
+function f(a: A, b: B) {
+  b = a; // Ok
+  a = b; // Error
+  // Type 'B' is not assignable to type 'A'.
+  //   Types of parameters 'y' and 'y' are incompatible.
+  //     Type 'U' is not assignable to type 'T'.
+  //       'T' could be instantiated with an arbitrary type which could be unrelated to 'U'.
+}
+```
+
+开启该规则将抛出异常
+
+## suppressExcessPropertyErrors
+
+开启此规则时，在属性比 interface 中更多时将不会抛出异常，例如以下示例中所示的错误：
+
+```typescript
+type Point = { x: number; y: number };
+const p: Point = { x: 1, y: 3, m: 10 };
+// Type '{ x: number; y: number; m: number; }' is not assignable to type 'Point'.
+// Object literal may only specify known properties, and 'm' does not exist in type 'Point'.
+```
+
+类似的需求，目前可以用//@ts-ignore 实现
+
+## suppressImplicitAnyIndexErrors
+
+从对象读取属性时，默认读取未定义的属性会报错。开启此规则将不会报错。
+不推荐使用这个规则，部分特殊场景使用//@ts-ignore 忽略 ts 的检查。
+
+# Language and Environment
+
+## emitDecoratorMetadata
+
+为与 reflect-metadata 一起工作的装饰器发送类型元数据。
+
+## experimentalDecorators
+
+启用对装饰器的支持。
+PS：es 标准中的装饰器目前处于 stage2 阶段(20210908)，ts 当前的装饰器实现与 es 标准的装饰器不一致。
+
+## jsx \*\*\*
+
+控制在 js 文件中 jsx 的编译方式。只在.tsx 文件中生效。
+
+- react:.js 用 JSX 编译为等效 React.createElement 调用的文件
+- react-jsx: .js 文件的 JSX 改为\_jsx 调用(编译时自动引入\_jsx 依赖)
+- react-jsxdev:.js 使用 JSX 发出文件来\_jsx 调用(同上)
+- preserve:.jsx 在 JSX 不变的情况下发出文件（不编译 jsx 文件，输出 jsx 文件）
+- react-native:.js 在 JSX 不变的情况下发出文件(不编译 jsx，输出 js 文件)
+
+## jsxFactory
+
+在编译 jsx 元素时，指定调用的函数。默认是 React.createElement。
+
+## jsxFragmentFactory
+
+在设置 jsxFactory 时，通过该属性指定 FragmentFactory
+
+## jsxImportSource
+
+## lib
+
+ts 内置了 es 标准的 API，以及浏览器环境中的内置对象(document 等)，在以下场景中，可以通过 lib 定义一些高级库和单独的库。
+
+- 程序不在浏览器中运行，因此不需要"dom"类型定义
+- 运行时平台提供了某些 JavaScript API 对象（可能通过 polyfills），但尚不支持给定 ECMAScript 版本的完整语法
+- 一些（但不是全部）更高级别 ECMAScript 版本的 polyfill 或自定义实现
+
+[支持的库参考](https://github.com/microsoft/TypeScript/tree/main/lib)
+
+## noLib
+
+开启此规则时将忽略 lib。
