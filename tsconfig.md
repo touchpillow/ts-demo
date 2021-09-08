@@ -1,6 +1,6 @@
 # 配置的思路
 
-尽量在不影响开发效率的前提下，执行严格的类型检查，使用准确的类型注解，减少 any。
+尽量在不影响开发效率的前提下，执行严格的类型检查，使用准确的类型注解，减少显式和隐式的 any。
 
 # root fields
 
@@ -325,3 +325,15 @@ ts 的模块配置。目前可忽略，使用 es 标准的模块系统。
 - error：这会保留所有导入（与 preserve 选项相同），但是当一个变量作为值导入仅用作类型时会出错。如果您想确保没有意外导入任何值，但仍使副作用导入显式，这可能很有用。
 
 可以使用 import type 来显式创建一个 永远不应发送到 JavaScript 的 import 语句。
+
+## importsNotUsedAsValues
+
+生成的.js.map 文件是否写入到 js 文件内。这会导致 js 文件体积增大，但是在部分场景下有用(比如，在 web 网站禁止 map 文件时想要调试 js 可以使用这个方式)。
+
+## inlineSources
+
+设置为 true 时，将会把源 ts 文件的内容作为字符串放入 source map 中，这在 importsNotUsedAsValues 提到的场景中有用，即在部分禁止 source map 的网站调试代码。
+
+## mapRoot
+
+调试时，指定调试器定位到 source map 文件的位置。
