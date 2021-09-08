@@ -337,3 +337,74 @@ ts 的模块配置。目前可忽略，使用 es 标准的模块系统。
 ## mapRoot
 
 调试时，指定调试器定位到 source map 文件的位置。
+
+## newLine
+
+行位序列类型(LF/CRLF)
+
+## noEmit
+
+不生成编译器输出文件，如 source map、 .d.ts 等
+
+## noEmitHelpers
+
+指定高级 api 在转换时使用自己提供的实现。
+
+## noEmitOnError
+
+报告错误时是否输出文件。
+
+## outDir
+
+将生成的 js 文件输出到该属性指定的目录，并保留源文件的目录结构。不指定时，js 文件将输出在源 ts 文件目录上。
+
+## outFile
+
+所有全局文件将会连接到指定的单个文件中。一般不使用。
+
+## preserveConstEnums
+
+在使用常量枚举时，默认会把枚举成员编译为对应的值。开启此选项，将会保留枚举值（将枚举值编译为对象）。
+
+## removeComments
+
+编译成 js 时删除注释，默认为 false（与 webpack 的对应功能类似）。
+
+## sourceMap
+
+编译时是否生成源映射文件(source map)。
+
+## sourceRoot
+
+调试时，指定调试器定位到 ts 文件的位置而不是相对源文件的位置。
+
+## stripInternal
+
+是否为@internal 发出声明。(@internal 是在 jsDoc 注释中使用,表示关联的元素是库的内部元素)。
+这是一个内部编译器选项，慎用。
+
+# JavaScript Support
+
+## allowJs \*\*\*
+
+是否允许在项目中使用 js 文件
+
+## checkJs \*\*\*
+
+当 allowJs 开启时，checkJs 开启后将会检查 js 文件内的语法
+
+## maxNodeModuleJsDepth
+
+限制 node_modules 和加载 js 文件的最大依赖深度。
+
+# Editor Support
+
+## disableSizeLimit \*\*\*
+
+默认情况下，ts 会限制分配的内存，以防止项目非常大时出现内存问题。
+
+## plugins
+
+要在编辑器中运行的语言服务插件列表.(一般使用编辑器的扩展而非这个属性)
+
+# Interop Constraints
