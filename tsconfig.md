@@ -11,7 +11,7 @@
 ## extends
 
 指定要继承的配置文件配置的路径。加载时，先加载基础配置文件，然后加载当前的文件，并且当前文件的配置会覆盖基础配置。在所有相关的配置文件的相对路径，都是相对于起始配置文件解析。不允许配置文件中的循环继承。
-目前顶层属性，references 不能继承
+目前顶层属性中，references 不能继承
 
 ## include
 
@@ -650,3 +650,39 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 指定一个文件将增量编译信息存储为项目的一部分。
 
 此选项提供了一种配置 TypeScript 跟踪它存储在磁盘上的文件以指示项目的构建状态的位置的方法——默认情况下，它们与您发出的 JavaScript 位于同一文件夹中。
+
+# Output Formatting
+
+## noErrorTruncation
+
+是否不截断错误消息（类型过长是是否不出省略号）
+
+## preserveWatchOutput
+
+是否在 watch 模式下保留之前的控制台输出，而不是每次发生更改时都清除屏幕
+
+## pretty
+
+使用颜色和上下文对错误和消息进行样式化，默认情况下是启用的 - 让您有机会从编译器中获得不那么简洁的单一颜色的消息
+
+# Completeness
+
+## skipLibCheck
+
+跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间。例如，两个库可以 type 以不一致的方式定义相同的两个副本。TypeScript 不会对所有.d.ts 文件进行全面检查，而是会对在应用源代码中专门引用的代码进行类型检查。
+
+# Command Line
+
+**watch options**
+
+## assumeChangesOnlyAffectDirectDependencies
+
+启用此选项后，TypeScript 将不会重新检查所有真正可能受影响的文件，而只会重新检查已更改的文件以及直接导入它们的文件。
+
+## watchFile
+
+- fixedPollingInterval：以固定时间间隔每秒多次检查每个文件的更改。
+- priorityPollingInterval：每秒多次检查每个文件的更改，但使用启发式方法检查某些类型的文件，检查频率低于其他文件。
+- dynamicPriorityPolling：使用动态队列，其中不经常修改的文件将不那么频繁地检查。
+- useFsEvents （默认）：尝试使用操作系统/文件系统的本机事件进行文件更改的监听。
+- useFsEventsOnParentDirectory: 尝试使用操作系统/文件系统的本机事件来监听文件父目录的变化
