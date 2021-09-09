@@ -99,6 +99,8 @@
 
 # tsconfig 配置说明(2021-09-09)
 
+**带(\*\*\*)的选项是个人认为比较重要的**
+
 ## root fields
 
 ### compilerOptions
@@ -788,7 +790,7 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 
 ## Command Line
 
-**watch options，在命令行添加--watch 选项开启**
+在命令行添加--watch 选项开启监听，响应配置写在 watchOptions 中
 
 ### assumeChangesOnlyAffectDirectDependencies
 
