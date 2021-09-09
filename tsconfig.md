@@ -5,46 +5,116 @@
 ## 建议配置
 
 参考了[ts book 的推荐](https://github.com/tsconfig/bases/)
-里面有对 node 环境和浏览器环境区分，然后抽取了一个公共的 base config，各自环境的 tsconfig 继承了 base config
+对 node 环境和浏览器环境区分，然后抽取了一个公共的 base config，各自环境的 tsconfig 继承了 base config
+
+### baseconfig
 
 ```json
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Create React App",
-
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "target": "es5",
-
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "target": "ES6",
+    //编译生成的文件加上use strict
+    "alwaysStrict": true,
+    //开启所有的strict选项
+    "strict": true,
+    //对switch的严格检查
     "noFallthroughCasesInSwitch": true,
+    //大小写严格
+    "forceConsistentCasingInFileNames": true,
+    //允许js
+    "allowJs": true,
+    //对js也开启检查。类型是自动推导的，
+    "checkJs": true,
+    //保持import语法编译时严格遵循es规范
+    "esModuleInterop": true,
+    //保持import语法编译时和babel的行为一致
+    "allowSyntheticDefaultImports": true,
+    //不输出source map、.d.ts等文件
+    "noEmit": true,
+    //允许加载json
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true
-  }
+    //严格区分可选属性和类型为undefined的属性
+    // ts 4.3开始支持，请确认ts版本
+    "exactOptionalPropertyTypes": true, //待定，是否过于严格？
+    //只能使用中括号读取未知字段
+    "noPropertyAccessFromIndexSignature": true, //待定，是否过于严格？
+    //用中括号读取字段值时添加undefined，更准确的类型推导
+    "noUncheckedIndexedAccess": true //待定，是否过于严格？
+  },
+  //根据项目配置，主要是src/**
+  "include": ["src/**"],
+  "exclude": ["node_modules"],
+  //因项目而异
+  "baseUrl": "."
 }
 ```
 
-# root fields
+### browser
 
-## files
+```json
+{
+  "compilerOptions": {
+    //可根据运行环境添加不同的lib
+    "lib": ["dom", "dom.iterable", "esnext"],
+    //兼容es5，如果对浏览器兼容要求不高，可以使用ES6
+    "target": "ES5",
+    //浏览器环境使用最新的es module语法
+    "module": "ESNext",
+    //添加编译时的警告
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    //减少隐式any
+    "noImplicitAny": true, //待定
+    //严格区分 import和import type
+    "importsNotUsedAsValues": "error", //待定
+    //开启对装饰器的支持
+    "experimentalDecorators": true,
+    //resolveJsonModule设置为true要开启此选项
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "extends": "./baseConfig.json",
+  //因项目而已，配置别名
+  "paths": []
+}
+```
+
+### node
+
+```json
+{
+  "compilerOptions": {
+    //按照当前的node版本更新
+    "lib": ["es2021"],
+    //node环境用commonjs
+    "module": "commonjs",
+    //按照当前的node版本更新
+    "target": "es2021"
+  },
+  "extends": "./baseConfig.json",
+  //因项目而已，配置别名
+  "paths": []
+}
+```
+
+# tsconfig 配置说明(2021-09-09)
+
+## root fields
+
+### compilerOptions
+
+编译相关的选项
+
+### files
 
 编译需要的单个文件列表（一般用 include 和 exclude 指定）
 
-## extends
+### extends
 
 指定要继承的配置文件配置的路径。加载时，先加载基础配置文件，然后加载当前的文件，并且当前文件的配置会覆盖基础配置。在所有相关的配置文件的相对路径，都是相对于起始配置文件解析。不允许配置文件中的循环继承。
 目前顶层属性中，references 不能继承
 
-## include
+### include
 
 指定要包含在程序中的文件,值可以是具体文件路径，也可以是用于匹配的正则模式。解析时路径基于包含 tsconfig.json 的目录开始解析。
 
@@ -52,12 +122,12 @@
 - ? 匹配任何一个字符（不包括目录分隔符）
 - \*\*/ 匹配嵌套到任何级别的任何目录
 
-## exclude
+### exclude
 
 指定解析时应跳过的文件或模式数组。
 结果仅对 include 内的文件生效（也就是无法对 files、references 等指定的文件生效，也许可以理解为优先级？）。
 
-## references
+### references
 
 是一个对象数组，用于指定要引用的项目，用于将大型项目拆分。
 
@@ -73,13 +143,17 @@
 
 参考 https://www.typescriptlang.org/docs/handbook/project-references.html
 
-## watchOptions
+### watchOptions
 
 对于文件监听的一些设置
 
-# type checking
+### typeAcquisition
 
-## allowUnreachableCode
+自动下载类型时的选项
+
+## type checking
+
+### allowUnreachableCode
 
 允许无法访问的代码
 
@@ -89,7 +163,7 @@
 
   可以配合 prettier 自动删除无法访问的代码
 
-## allowUnusedLabels
+### allowUnusedLabels
 
 允许未使用的标签(变量)
 
@@ -97,11 +171,11 @@
 - true 未使用的标签被忽略
 - false 引发有关未使用标签的编译器错误
 
-## alwaysStrict \*\*\*
+### alwaysStrict \*\*\*
 
 文件始终在 js 的严格模式下解析，为每个源文件设置""use strict"
 
-## exactOptionalPropertyTypes
+### exactOptionalPropertyTypes \*\*\*
 
 可选属性是否能被设置为 undefined（值为 undefined 和 interface 没有该属性值，语义上不同，使用上也有细微的差别。）
 
@@ -118,7 +192,7 @@ const a: A = {
 
 以上示例在开发中常用。如果将 exactOptionalPropertyTypes 设置为 true,那么将 a 设置为 undefined 是不被允许的。
 
-## noFallthroughCasesInSwitch \*\*\*
+### noFallthroughCasesInSwitch \*\*\*
 
 确保 switch 语句中的任何非空 case 包含 break 或 return。
 
@@ -133,7 +207,7 @@ switch (a) {
 }
 ```
 
-## noImplicitAny \*\*\*
+### noImplicitAny \*\*\*
 
 在没有添加类型注解，ts 又没办法通过类型推导自动推断类型时，是否允许默认类型为 any。
 设置为 true 时，没有类型注解的地方会提示错误。
@@ -146,7 +220,7 @@ function aa(v) {
 }
 ```
 
-## noImplicitOverride
+### noImplicitOverride
 
 子类覆盖父类的功能时，是否强制使用 override 关键字。设置为 true 时，如果子类重写父类的功能，需要添加 override 关键字
 
@@ -164,11 +238,11 @@ function aa(v) {
 }
 ```
 
-## noImplicitReturns
+### noImplicitReturns
 
 检查函数中的所有代码路径以确保它们返回一个值.(设置 strictNullChecks 可达到一样的效果，因为没有 return 时默认返回 undefined)
 
-## noImplicitThis
+### noImplicitThis
 
 在隐式的 any type 时使用 this 抛出异常
 
@@ -192,7 +266,7 @@ class Rectangle {
 }
 ```
 
-## noPropertyAccessFromIndexSignature
+### noPropertyAccessFromIndexSignature \*\*\*
 
 是否允许使用点语法读取未知字段。设置为 true 时，只能使用中括号读取未知字段，这样做是为了保证点语法和索引语法访问字段以及在类型中声明属性的一致性。
 
@@ -205,7 +279,7 @@ let a: A = { a: "" };
 const b = a.b; //属性“b”来自索引签名，因此必须使用[“b”]访问它
 ```
 
-## noUncheckedIndexedAccess \*\*\*
+### noUncheckedIndexedAccess \*\*\*
 
 在使用索引签名描述未知的 key 时，是否添加 undefined 到未声明的字段。
 
@@ -218,60 +292,65 @@ let b: B = { a: "" };
 const v = b["name"]; //类型为string|undefiend
 ```
 
-## noUnusedLocals \*\*\*
+### noUnusedLocals \*\*\*
 
 存在未使用的变量时，是否抛出异常。eslint 也有一样的功能。
 
-## noUnusedParameters \*\*\*
+### noUnusedParameters \*\*\*
 
 存在未使用的参数时，是否抛出异常。和 noUnusedLocals 类似
 
-## strict
+### strict
 
 该属性设置为 true 时，启用所有严格模式系列选项。可以根据需要单独关闭某个选项。
 
-### strictBindCallApply \*\*\*
+#### strictBindCallApply \*\*\*
 
 属性设置为 true 时，将会在 call、apply、bind 调用时严格检查参数类型。
 不开启时，这些函数接受任何参数并返回 any
 
-### strictFunctionTypes \*\*\*
+#### strictFunctionTypes \*\*\*
 
 更准确的检查函数的参数类型，即是否允许默认的、发生在函数参数位置上的逆变。
 
-### strictNullChecks \*\*\*
+#### strictNullChecks \*\*\*
 
 是否执行严格的空检查。如果是 false 或者不设置，那么 null、undefined 类型将会被忽略
 
-### strictPropertyInitialization
+#### strictPropertyInitialization
 
 设置为 true 时，不允许类属性没有初始化(除类型有 undefined 的属性)
 
-### useUnknownInCatchVariables
+#### useUnknownInCatchVariables
 
 设置为 true 时，catch 的参数的默认类型为 unknown
 
-# modules
+## modules
 
-## allowUmdGlobalAccess
+### allowUmdGlobalAccess
 
 设置为 true 时，允许从模块文件内部访问全局对象(如 jq)。和 eslint 的 env 是一样的作用。
 
-## baseUrl
+### baseUrl
 
 设置解析模块时的基础路径，比如设置 baseUrl 为"./"，解析"a.ts"时完整路径为"./a,ts"
 
-## module,moduleResolution
+### module
 
-ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统。
+编译生成的文件使用说明模块语法。一般 Node 使用 commonjs，其他可以用 ESNext，即最新的 es module。
 
-## noResolve
+### moduleResolution
+
+模块的解析策略。classic(默认值)/node
+开启 resolveJsonModule 时，要设置此属性为 node
+
+### noResolve
 
 默认情况下，TypeScript 将检查 import 和 reference 指令的初始文件集，并将这些解析的文件添加到程序中。
 
 如果 noResolve 设置，则不会发生此过程。但是，import 仍会检查语句以查看它们是否解析为有效模块，因此需要确保通过其他方式满足这一要求。
 
-## paths
+### paths
 
 解析模块时，将导入路径映射到新的路径上，支持路径模式。可以正确的导入 umd/require 包，也可以避免过长的路径。类似 webpack 的路径别名
 
@@ -291,18 +370,18 @@ ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统�
 }
 ```
 
-## resolveJsonModule
+### resolveJsonModule
 
 是否允许导入带有 json 类型的模块。
 
-## rootDir
+### rootDir
 
-## typeRoots
+### typeRoots \*\*\*
 
 指定目录下的文件中的类型将作为全局的类型。该属性不设置时，所有@types 下的类型默认是全局的。设置了之后，只有该属性对应的文件的类似是全局的。
 通常可以通过该属性设置一些基础的全局类型。
 
-## types
+### types
 
 默认情况下，所有可见的@types 的包是全局的，通过该属性可指定某些包的 types 是全局的
 
@@ -314,29 +393,29 @@ ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统�
 }
 ```
 
-# emit
+## emit
 
-## declaration
+### declaration
 
 设置为 true 时，编译 ts 文件，会生成对应的 js 文件及.d.ts 的类型声明文件。
 
-## declarationDir
+### declarationDir
 
 将生成的.d.ts 文件放在该属性对应的路径下
 
-## declarationMap
+### declarationMap
 
 为.d.ts 文件生成一个映射到源 ts 文件的 source map,主要方便编辑器去定位到源文件。
 
-## downlevelIteration
+### downlevelIteration
 
 设置为 true 时，在转换成低版本的 js 语法时，对于一些 es6 的遍历 api(for of，...arg，Symbol.iterator 等)，将会使用 Symbol.iterator 更准确的模拟这些遍历行为。
 
-## emitBOM
+### emitBOM
 
 控制 TypeScript 在写入输出文件时是否会发出字节顺序标记 (BOM)。某些运行时环境需要 BOM 才能正确解释 JavaScript 文件；其他环境要求它不存在。默认值 false 通常是最好的，除非有理由更改它。
 
-## emitDeclarationOnly
+### emitDeclarationOnly
 
 只生成.d.ts 文件；不生成.js 文件。
 
@@ -345,13 +424,13 @@ ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统�
 - 使用 TypeScript 以外的转译器来生成 JavaScript。
 - 使用 TypeScript 只需要生成.d.ts 文件。
 
-## importHelpers
+### importHelpers
 
 对于某些降级 api(异步，extends 等)，TypeScript 使用一些辅助代码来完成这类操作。默认情况下，这些代码被插入到使用它们的文件中。如果在许多不同的模块中使用相同的 api，这可能会导致代码重复。
 
 如果该 importHelpers 标志打开，则这些辅助函数将从 tslib 模块导入。您需要确保该 tslib 模块能够在运行时导入。这只影响模块；全局脚本文件不会尝试导入模块。
 
-## importsNotUsedAsValues \*\*\*
+### importsNotUsedAsValues \*\*\*
 
 该属性控制如何 import 工作，有 3 个不同的选项：
 
@@ -361,90 +440,90 @@ ts 的模块配置。浏览器环境可忽略，使用 es 标准的模块系统�
 
 可以使用 import type 来显式创建一个 永远不应发送到 JavaScript 的 import 语句。
 
-## importsNotUsedAsValues
+### inlineSourceMap
 
 生成的.js.map 文件是否写入到 js 文件内。这会导致 js 文件体积增大，但是在部分场景下有用(比如，在 web 网站禁止 map 文件时想要调试 js 可以使用这个方式)。
 
-## inlineSources
+### inlineSources
 
 设置为 true 时，将会把源 ts 文件的内容作为字符串放入 source map 中，这在 importsNotUsedAsValues 提到的场景中有用，即在部分禁止 source map 的网站调试代码。
 
-## mapRoot
+### mapRoot
 
 调试时，指定调试器定位到 source map 文件的位置。
 
-## newLine
+### newLine
 
 行位序列类型(LF/CRLF)
 
-## noEmit
+### noEmit
 
 不生成编译器输出文件，如 source map、 .d.ts 等
 
-## noEmitHelpers
+### noEmitHelpers
 
 指定高级 api 在转换时使用自己提供的实现。
 
-## noEmitOnError
+### noEmitOnError
 
 报告错误时是否输出文件。
 
-## outDir
+### outDir
 
 将生成的 js 文件输出到该属性指定的目录，并保留源文件的目录结构。不指定时，js 文件将输出在源 ts 文件目录上。
 
-## outFile
+### outFile
 
 所有全局文件将会连接到指定的单个文件中。一般不使用。
 
-## preserveConstEnums
+### preserveConstEnums
 
 在使用常量枚举时，默认会把枚举成员编译为对应的值。开启此选项，将会保留枚举值（将枚举值编译为对象）。
 
-## removeComments
+### removeComments
 
 编译成 js 时删除注释，默认为 false（与 webpack 的对应功能类似）。
 
-## sourceMap
+### sourceMap
 
 编译时是否生成源映射文件(source map)。
 
-## sourceRoot
+### sourceRoot
 
 调试时，指定调试器定位到 ts 文件的位置而不是相对源文件的位置。
 
-## stripInternal
+### stripInternal
 
 是否为@internal 发出声明。(@internal 是在 jsDoc 注释中使用,表示关联的元素是库的内部元素)。
 这是一个内部编译器选项，慎用。
 
-# JavaScript Support
+## JavaScript Support
 
-## allowJs \*\*\*
+### allowJs \*\*\*
 
 是否允许在项目中使用 js 文件
 
-## checkJs \*\*\*
+### checkJs \*\*\*
 
 当 allowJs 开启时，checkJs 开启后将会检查 js 文件内的语法
 
-## maxNodeModuleJsDepth
+### maxNodeModuleJsDepth
 
 限制 node_modules 和加载 js 文件的最大依赖深度。
 
-# Editor Support
+## Editor Support
 
-## disableSizeLimit \*\*\*
+### disableSizeLimit
 
 默认情况下，ts 会限制分配的内存，以防止项目非常大时出现内存问题。开启这个选项可去掉这个限制。
 
-## plugins
+### plugins
 
 要在编辑器中运行的语言服务插件列表.(一般使用编辑器的扩展而非这个属性)
 
-# Interop Constraints
+## Interop Constraints
 
-## allowSyntheticDefaultImports
+### allowSyntheticDefaultImports
 
 该属性设置为 true 时，可使用
 
@@ -460,7 +539,7 @@ import * as React from "react";
 
 即使该模块没有默认导出，babel 编译时也会处理，自动创建一个默认值。开启这个选项是让 ts 的行为和 babel 的行为一致。
 
-## esModuleInterop
+### esModuleInterop
 
 默认情况下，对于部分导入语句，如：
 
@@ -491,27 +570,27 @@ ES6 模块规范规定命名空间 import ( import \* as x) 只能是一个对�
 
 开启 esModuleInterop 可解决上面两个问题。(启用 esModuleInterop 也会启用 allowSyntheticDefaultImports.)
 
-## forceConsistentCasingInFileNames \*\*\*
+### forceConsistentCasingInFileNames \*\*\*
 
 不同的系统，对文件/文件夹大小写的规则不同，linux 和 windows 的就不一样(win 后面改了)，开启此规则，可以保证不同系统下的文件名大小写一致。
 
-## isolatedModules
+### isolatedModules
 
 isolatedModules 如果编写的某些代码无法被单文件转换过程正确解释，则设置该标志会发出警告。
 
 它不会改变代码的行为，也不会改变 TypeScript 的检查和发射过程的行为。
 
-## preserveSymlinks
+### preserveSymlinks
 
 启用该规则后，对于 import 和 reference，解析路径时是相对于配置对应的文件的位置解析的，而不是相对于配置解析到的路径解析。
 
-# Backwards Compatibility
+## Backwards Compatibility
 
-## noImplicitUseStrict
+### noImplicitUseStrict
 
 输出目标为非 es6 时，默认会在输出文件头部加上 use strict。启用此规则会不加 use strict，所以一般不用这个属性
 
-## noStrictGenericChecks
+### noStrictGenericChecks
 
 在比较两个泛型函数时，TypeScript 将统一类型参数。
 
@@ -531,7 +610,7 @@ function f(a: A, b: B) {
 
 开启该规则将抛出异常
 
-## suppressExcessPropertyErrors
+### suppressExcessPropertyErrors
 
 开启此规则时，在属性比 interface 中更多时将不会抛出异常，例如以下示例中所示的错误：
 
@@ -544,23 +623,23 @@ const p: Point = { x: 1, y: 3, m: 10 };
 
 类似的需求，目前可以用//@ts-ignore 实现
 
-## suppressImplicitAnyIndexErrors
+### suppressImplicitAnyIndexErrors
 
 从对象读取属性时，默认读取未定义的属性会报错。开启此规则将不会报错。
 不推荐使用这个规则，部分特殊场景使用//@ts-ignore 忽略 ts 的检查。
 
-# Language and Environment
+## Language and Environment
 
-## emitDecoratorMetadata
+### emitDecoratorMetadata
 
 为与 reflect-metadata 一起工作的装饰器发送类型元数据。
 
-## experimentalDecorators
+### experimentalDecorators
 
 启用对装饰器的支持。
 PS：es 标准中的装饰器目前处于 stage2 阶段(20210908)，ts 当前的装饰器实现与 es 标准的装饰器不一致。
 
-## jsx \*\*\*
+### jsx \*\*\*
 
 控制在 js 文件中 jsx 的编译方式。只在.tsx 文件中生效。
 
@@ -570,17 +649,17 @@ PS：es 标准中的装饰器目前处于 stage2 阶段(20210908)，ts 当前的
 - preserve:.jsx 在 JSX 不变的情况下发出文件（不编译 jsx 文件，输出 jsx 文件）
 - react-native:.js 在 JSX 不变的情况下发出文件(不编译 jsx，输出 js 文件)
 
-## jsxFactory
+### jsxFactory
 
 在编译 jsx 元素时，指定调用的函数。默认是 React.createElement。
 
-## jsxFragmentFactory
+### jsxFragmentFactory
 
 在设置 jsxFactory 时，通过该属性指定 FragmentFactory
 
-## jsxImportSource
+### jsxImportSource
 
-## lib \*\*\*
+### lib \*\*\*
 
 ts 内置了 es 标准的 API，以及浏览器环境中的内置对象(document 等)，在以下场景中，可以通过 lib 定义一些高级库和单独的库。
 
@@ -590,28 +669,29 @@ ts 内置了 es 标准的 API，以及浏览器环境中的内置对象(document
 
 [支持的库参考](https://github.com/microsoft/TypeScript/tree/main/lib)
 
-## noLib
+### noLib
 
 开启此规则时将忽略 lib。
 
-## target \*\*\*
+### target \*\*\*
 
 要编译到的 js 的版本，更改 target 会影响 lib，所以这两个要一起配置。
 ESNext 表示 ts 支持的最高版本。所以，不同的 ts 版本，对应的 esnext 也不同，慎用。
 
-## useDefineForClassFields \*\*\*
+### useDefineForClassFields
 
 使用即将发布的标准版本的类字段
 
-# Compiler Diagnostics
+## Compiler Diagnostics
 
-## explainFiles
+### explainFiles
 
 在编译时打印该文件作为项目一部分及作为编译结果一部分的原因，比如 target 指定为 es5，那么相应的文件中会注明 使用到的 es5 的相关 lib。
 
-## extendedDiagnostics
+### extendedDiagnostics
 
 编译时输出花费的响应时间及编译数据，如行数、节点数等。
+示例：
 
 - Files: 16
 - Lines: 21923
@@ -633,28 +713,28 @@ ESNext 表示 ts 支持的最高版本。所以，不同的 ts 版本，对应�
 - Emit time: 0.12s
 - Total time: 1.46s
 
-## generateCpuProfile
+### generateCpuProfile
 
 默认值 profile.cpuprofile
 编译器运行期间让 TypeScript 发出 v8 CPU 配置文件。CPU 配置文件可以深入了解为什么您的构建可能会很慢。
 
 此选项只能通过 CLI 使用：--generateCpuProfile tsc-output.cpuprofile。
 
-## listEmittedFiles
+### listEmittedFiles
 
 输出编译生成的文件路径
 
-## listFiles
+### listFiles
 
 输出编译的文件的路径
 
-## traceResolution
+### traceResolution
 
 打印有关每个文件的解析编译过程
 
-# Projects
+## Projects
 
-## composite
+### composite
 
 reference 的项目必须设置 composite 启用新设置。需要此设置以确保 TypeScript 可以快速确定在哪里可以找到引用项目的输出。
 
@@ -662,59 +742,59 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 - 所有实现文件都必须与 include 模式匹配或列在 files 数组中。如果违反此约束，tsc 将通知未指定哪些文件
 - declaration 必须开启
 
-## disableReferencedProjectLoad
+### disableReferencedProjectLoad
 
 在多项目 TypeScript 程序中，TypeScript 会将所有可用项目加载到内存中，以便为需要完整依赖关系（如“查找所有引用”）的编辑器响应提供准确的结果。
 
 如果项目很大，可以使用该标志 disableReferencedProjectLoad 来禁用所有项目的自动加载。相反，项目会在您通过编辑器打开文件时动态加载。
 
-## disableSolutionSearching
+### disableSolutionSearching
 
 使用复合 TypeScript 项目(使用 reference 引用其他项目)时，此选项提供了一种方法来声明在使用诸如在编辑器中查找所有引用或跳转到定义等功能时不希望包含项目
 
-## disableSourceOfProjectReferenceRedirect
+### disableSourceOfProjectReferenceRedirect
 
 使用复合 TypeScript 项目(使用 reference 引用其他项目)时，此选项提供了一种返回到 3.7 之前的行为的方法，其中 d.ts 文件被用作模块之间的边界
 
-## incremental
+### incremental
 
 将有关上次编译的项目依赖关系图的信息保存到磁盘上的文件中。这会与编译输出相同的文件夹中创建一系列.tsbuildinfo 在文件。在运行时不会使用它们，可以安全地删除它们
 
-## tsBuildInfoFile
+### tsBuildInfoFile
 
 指定一个文件将增量编译信息存储为项目的一部分。
 
 此选项提供了一种配置 TypeScript 跟踪它存储在磁盘上的文件以指示项目的构建状态的位置的方法——默认情况下，它们与您发出的 JavaScript 位于同一文件夹中。
 
-# Output Formatting
+## Output Formatting
 
-## noErrorTruncation
+### noErrorTruncation
 
 是否不截断错误消息（类型过长是是否不出省略号）
 
-## preserveWatchOutput
+### preserveWatchOutput
 
 是否在 watch 模式下保留之前的控制台输出，而不是每次发生更改时都清除屏幕
 
-## pretty
+### pretty
 
 使用颜色和上下文对错误和消息进行样式化，默认情况下是启用的 - 让您有机会从编译器中获得不那么简洁的单一颜色的消息
 
-# Completeness
+## Completeness
 
-## skipLibCheck
+### skipLibCheck
 
 跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间。例如，两个库可以 type 以不一致的方式定义相同的两个副本。TypeScript 不会对所有.d.ts 文件进行全面检查，而是会对在应用源代码中专门引用的代码进行类型检查。
 
-# Command Line
+## Command Line
 
-**watch options**
+**watch options，在命令行添加--watch 选项开启**
 
-## assumeChangesOnlyAffectDirectDependencies
+### assumeChangesOnlyAffectDirectDependencies
 
 启用此选项后，TypeScript 将不会重新检查所有真正可能受影响的文件，而只会重新检查已更改的文件以及直接导入它们的文件。
 
-## watchFile
+### watchFile
 
 - fixedPollingInterval：以固定时间间隔每秒多次检查每个文件的更改。
 - priorityPollingInterval：每秒多次检查每个文件的更改，但使用启发式方法检查某些类型的文件，检查频率低于其他文件。
@@ -722,7 +802,7 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 - useFsEvents （默认）：尝试使用操作系统/文件系统的本机事件进行文件更改的监听。
 - useFsEventsOnParentDirectory: 尝试使用操作系统/文件系统的本机事件来监听文件父目录的变化
 
-## watchDirectory
+### watchDirectory
 
 在无法监听递归文件的系统下选择监听整个目录树的策略。
 
@@ -730,7 +810,7 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 - dynamicPriorityPolling：使用动态队列，其中不经常修改的目录将不那么频繁地检查。
 - useFsEvents （默认）：尝试使用操作系统/文件系统的本机事件进行目录更改的监听。
 
-## fallbackPolling
+### fallbackPolling
 
 使用文件系统事件时，此选项指定当用完当前系统文件观察器和/或不支持当前系统文件观察器时使用的轮询策略。
 
@@ -739,11 +819,11 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 - dynamicPriorityPolling：使用动态队列，其中不经常修改的文件将不那么频繁地检查。
 - synchronousWatchDirectory：禁用对目录的延迟监视。当可能同时发生大量文件更改（例如，node_modules 从 running 更改 npm install）时，延迟监视很有用，但对于一些不太常见的设置，您可能希望使用此标志禁用它。
 
-## synchronousWatchDirectory
+### synchronousWatchDirectory
 
 在当前系统不支持递归观看的平台上同步调用回调并更新目录观察者的状态。而不是给出一个小的超时以允许对文件进行潜在的多次编辑
 
-## excludeDirectories
+### excludeDirectories
 
 使用此选项指定不被监听的目录，这可以减少在 linux 系统上监听的文件数量。
 
@@ -755,7 +835,7 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 }
 ```
 
-## excludeFiles
+### excludeFiles
 
 您可以使用 excludeFiles 指定某个文件不被监听。
 
@@ -767,11 +847,11 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 }
 ```
 
-# Type Acquisition
+## Type Acquisition
 
 在 js 文件中，ts 能够在后台和 node_modules 之外为模块下载类型。
 
-## enable
+### enable
 
 是否在 js 项目中允许自动获取类型。默认值为 true
 
@@ -783,7 +863,7 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 }
 ```
 
-## include
+### include
 
 如果在 js 项目中需要添加对第三方库的类型依赖，可以用该属性指定哪些类型可以从已定义的类型中获取，或者配合 disableFilenameBasedTypeAcquisition:false 使用
 
@@ -795,10 +875,14 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 }
 ```
 
-## exclude
+### exclude
 
 在 js 项目中，指定禁用某个模块的类型获取
 
-## disableFilenameBasedTypeAcquisition
+### disableFilenameBasedTypeAcquisition
 
-TypeScript 的类型获取可以根据项目中的文件名推断应该添加哪些类型。这意味着 jquery.js 在您的项目中拥有一个文件会自动从绝对类型下载 JQuery 的类型
+TypeScript 的类型获取可以根据项目中的文件名推断应该添加哪些类型。这意味着 jquery.js 在您的项目中会自动从绝对类型下载 JQuery 的类型
+
+```
+
+```

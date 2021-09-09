@@ -1,28 +1,25 @@
 {
-    "semi": true,
-    // "strict": true,
-    // "strictNullChecks": true,
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "ES2015",
+        //可根据运行环境添加不同的lib
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        //兼容es5，如果对浏览器兼容要求不高，可以使用ES6
+        "target": "ES5",
+        //浏览器环境使用最新的es module语法
+        "module": "ESNext",
+        //添加编译时的警告
+        "isolatedModules": true,
         "jsx": "react-jsx",
-        "experimentalDecorators": true,
-        "strictFunctionTypes": true,
-        "strictNullChecks": true,
-        "sourceMap": true,
+        //减少隐式any
         "noImplicitAny": true,
-        "noImplicitReturns": false,
-        "noImplicitOverride": true,
-        "noImplicitThis": false,
-        "extendedDiagnostics": true,
-        "typeRoots": [
-            "./typings"
-        ]
+        //严格区分 import和import type
+        "importsNotUsedAsValues": "error",
+        "moduleResolution": "Node"
     },
-    "extends": "./base.json",
-    "exclude": [
-        "node_modules",
-        "**/node_modules/*",
-        "./21-9/9-4.ts"
-    ],
+    "extends": "./baseConfig.json",
+    //因项目而已，配置别名
+    "paths": []
 }
