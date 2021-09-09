@@ -2,6 +2,37 @@
 
 尽量在不影响开发效率的前提下，执行严格的类型检查，使用准确的类型注解，减少显式和隐式的 any。
 
+## 建议配置
+
+参考了[ts book 的推荐](https://github.com/tsconfig/bases/)
+里面有对 node 环境和浏览器环境区分，然后抽取了一个公共的 base config，各自环境的 tsconfig 继承了 base config
+
+```json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Create React App",
+
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "target": "es5",
+
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true
+  }
+}
+```
+
 # root fields
 
 ## files
