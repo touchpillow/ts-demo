@@ -42,6 +42,10 @@
 
 参考 https://www.typescriptlang.org/docs/handbook/project-references.html
 
+## watchOptions
+
+对于文件监听的一些设置
+
 # type checking
 
 ## allowUnreachableCode
@@ -686,3 +690,84 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 - dynamicPriorityPolling：使用动态队列，其中不经常修改的文件将不那么频繁地检查。
 - useFsEvents （默认）：尝试使用操作系统/文件系统的本机事件进行文件更改的监听。
 - useFsEventsOnParentDirectory: 尝试使用操作系统/文件系统的本机事件来监听文件父目录的变化
+
+## watchDirectory
+
+在无法监听递归文件的系统下选择监听整个目录树的策略。
+
+- fixedPollingInterval：以固定时间间隔每秒多次检查每个目录的变化。
+- dynamicPriorityPolling：使用动态队列，其中不经常修改的目录将不那么频繁地检查。
+- useFsEvents （默认）：尝试使用操作系统/文件系统的本机事件进行目录更改的监听。
+
+## fallbackPolling
+
+使用文件系统事件时，此选项指定当用完当前系统文件观察器和/或不支持当前系统文件观察器时使用的轮询策略。
+
+- fixedPollingInterval：以固定时间间隔每秒多次检查每个文件的更改。
+- priorityPollingInterval：每秒多次检查每个文件的更改，但使用启发式方法检查某些类型的文件的频率低于其他文件。
+- dynamicPriorityPolling：使用动态队列，其中不经常修改的文件将不那么频繁地检查。
+- synchronousWatchDirectory：禁用对目录的延迟监视。当可能同时发生大量文件更改（例如，node_modules 从 running 更改 npm install）时，延迟监视很有用，但对于一些不太常见的设置，您可能希望使用此标志禁用它。
+
+## synchronousWatchDirectory
+
+在当前系统不支持递归观看的平台上同步调用回调并更新目录观察者的状态。而不是给出一个小的超时以允许对文件进行潜在的多次编辑
+
+## excludeDirectories
+
+使用此选项指定不被监听的目录，这可以减少在 linux 系统上监听的文件数量。
+
+```typescript
+{
+  "watchOptions": {
+    "excludeDirectories": ["**/node_modules", "_build", "temp/*"]
+  }
+}
+```
+
+## excludeFiles
+
+您可以使用 excludeFiles 指定某个文件不被监听。
+
+```typescript
+{
+  "watchOptions": {
+    "excludeFiles": ["temp/file.ts"]
+  }
+}
+```
+
+# Type Acquisition
+
+在 js 文件中，ts 能够在后台和 node_modules 之外为模块下载类型。
+
+## enable
+
+是否在 js 项目中允许自动获取类型。默认值为 true
+
+```typescript
+{
+  "typeAcquisition": {
+    "enable": false
+  }
+}
+```
+
+## include
+
+如果在 js 项目中需要添加对第三方库的类型依赖，可以用该属性指定哪些类型可以从已定义的类型中获取，或者配合 disableFilenameBasedTypeAcquisition:false 使用
+
+```typescript
+{
+  "typeAcquisition": {
+    "include": ["jquery"]
+  }
+}
+```
+
+## exclude
+
+在 js 项目中，指定禁用某个模块的类型获取
+
+## disableFilenameBasedTypeAcquisition
+
+TypeScript 的类型获取可以根据项目中的文件名推断应该添加哪些类型。这意味着 jquery.js 在您的项目中拥有一个文件会自动从绝对类型下载 JQuery 的类型
