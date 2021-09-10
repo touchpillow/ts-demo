@@ -14,8 +14,10 @@
   "compilerOptions": {
     //因项目而异
     "baseUrl": ".",
-    //因项目而已，配置别名
-    "paths": [],
+    //因项目而已，配置别名,建议的配置如下
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     //编译生成的文件加上use strict
     "alwaysStrict": true,
     //开启所有的strict选项
@@ -88,11 +90,11 @@
     //node环境用commonjs
     "module": "commonjs",
     //按照当前的node版本更新
-    "target": "es2021"
+    "target": "es2021",
+    //因项目而已，配置别名
+    "paths": []
   },
-  "extends": "./baseConfig.json",
-  //因项目而已，配置别名
-  "paths": []
+  "extends": "./baseConfig.json"
 }
 ```
 
