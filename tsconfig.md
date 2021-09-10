@@ -12,7 +12,10 @@
 ```json
 {
   "compilerOptions": {
-    "target": "ES6",
+    //因项目而异
+    "baseUrl": ".",
+    //因项目而已，配置别名
+    "paths": [],
     //编译生成的文件加上use strict
     "alwaysStrict": true,
     //开启所有的strict选项
@@ -31,21 +34,19 @@
     "allowSyntheticDefaultImports": true,
     //不输出source map、.d.ts等文件
     "noEmit": true,
-    //允许加载json
-    "resolveJsonModule": true,
     //严格区分可选属性和类型为undefined的属性
-    // ts 4.3开始支持，请确认ts版本
+    // ts 4.3开始支持，开启前先确认ts版本
     "exactOptionalPropertyTypes": true, //待定，是否过于严格？
     //只能使用中括号读取未知字段
     "noPropertyAccessFromIndexSignature": true, //待定，是否过于严格？
     //用中括号读取字段值时添加undefined，更准确的类型推导
-    "noUncheckedIndexedAccess": true //待定，是否过于严格？
+    "noUncheckedIndexedAccess": true, //待定，是否过于严格？
+    //减少隐式any
+    "noImplicitAny": true //待定,对当前项目影响较大
   },
-  //根据项目配置，主要是src/**
-  "include": ["src/**"],
-  "exclude": ["node_modules"],
-  //因项目而异
-  "baseUrl": "."
+  //根据项目配置，一般主要是src
+  "include": ["src/"],
+  "exclude": ["node_modules"]
 }
 ```
 
@@ -63,19 +64,17 @@
     //添加编译时的警告
     "isolatedModules": true,
     "jsx": "react-jsx",
-    //减少隐式any
-    "noImplicitAny": true, //待定
     //严格区分 import和import type
-    "importsNotUsedAsValues": "error", //待定
+    "importsNotUsedAsValues": "error", //待定，较严格，对当前项目影响较大
     //开启对装饰器的支持
     "experimentalDecorators": true,
     //resolveJsonModule设置为true要开启此选项
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    //跳过lib的类型检查
+    "skipLibCheck": true
   },
-  "extends": "./baseConfig.json",
-  //因项目而已，配置别名
-  "paths": []
+  "extends": "./baseConfig.json"
 }
 ```
 
@@ -787,6 +786,8 @@ reference 的项目必须设置 composite 启用新设置。需要此设置以�
 ### skipLibCheck
 
 跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间。例如，两个库可以 type 以不一致的方式定义相同的两个副本。TypeScript 不会对所有.d.ts 文件进行全面检查，而是会对在应用源代码中专门引用的代码进行类型检查。
+
+也就是信任 lib 的类型声明
 
 ## Command Line
 
